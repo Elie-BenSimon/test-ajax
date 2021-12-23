@@ -18,7 +18,7 @@ function handleClick(event) {
         // si cest un bouton "edit"
         case 'editButton':
             // récupération de l'élément "pre" associé
-            const preElement = event.target.parentNode.querySelector('pre');
+            const preElement = event.target.parentNode.parentNode.querySelector('pre');
             // est ce que ce dernier est editable?
             let isEditable = preElement.getAttribute("contentEditable");
             isEditable = (isEditable === 'true');
