@@ -1,0 +1,15 @@
+div {
+}
+
+pre {
+    background:bisque;
+    padding:10px;
+    display: inline-block;
+    white-space: pre-wrap;
+    background: #EEE;
+}
+
+section {
+    max-width: 900px;
+    margin: auto;
+}
