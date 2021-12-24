@@ -12,14 +12,32 @@ try {
 }
 // si la connection ne fonctionne pas ; nous rentrons dans ce bloc
 catch (Exception $error) {
-    // var_dump($error);
     echo "Problème de connexion" . PHP_EOL;
     exit;
 }
 
-$sql = "
+
+if (!empty($_GET['nomdelacategorie'])) {
+    $value = $_GET['nomdelacategorie'];
+    $insertQuery = "
+        INSERT INTO `test` (
+            `text`
+        ) VALUES (
+            '{$value}'
+        )
+        WHERE `id` = '{$value}'
+    ";
+    $pdoInstance->exec($insertQuery);
+    header('Location: index.php');
+    exit;
+}
+
+
+$sql = 
+"
     SELECT
-    `text`
+    `text`,
+    `id`
     FROM `test`
 ";
 $pdoResult = $pdoInstance->query($sql);
@@ -30,7 +48,7 @@ $blocInfoObjectList = [];
 foreach ($blocInfoList as $textData) {
     $blocInfo = new BlocInfo(
         $textData['text'],
+        $textData['id']
     );
     $blocInfoObjectList[] = $blocInfo;
 }
-?>
