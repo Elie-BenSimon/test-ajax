@@ -17,15 +17,13 @@ catch (Exception $error) {
 }
 
 
-if (!empty($_GET['nomdelacategorie'])) {
-    $value = $_GET['nomdelacategorie'];
+if (!empty($_GET['idToUpdate']) && !empty($_GET['contentToUpdate'])) {
+    $id = $_GET['idToUpdate'];
+    $content = $_GET['contentToUpdate'];
     $insertQuery = "
-        INSERT INTO `test` (
-            `text`
-        ) VALUES (
-            '{$value}'
-        )
-        WHERE `id` = '{$value}'
+        UPDATE `test`
+        SET `text` = '{$content}'
+        WHERE `id` = '{$id}'
     ";
     $pdoInstance->exec($insertQuery);
     header('Location: index.php');

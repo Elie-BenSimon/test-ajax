@@ -52,11 +52,28 @@ const click = {
 
     post: function () {
         if (click.elementEditable != null) {
+
+            // stockage des informations à passer en requête
             const id = click.elementEditable.id;
             const value = click.elementEditable.textContent;
             let form = document.createElement('form');
             form.method = 'GET';
-            form.innerHTML = `<input name='updateContent' value=${value} type='hidden'>`;
+
+            // input stockant l'id de l'élément modifié
+            let hiddenfield = document.createElement('input');
+            hiddenfield.type = 'hidden';
+            hiddenfield.name = 'idToUpdate';
+            hiddenfield.value = id;
+            form.append(hiddenfield);
+
+            // input stockant l'id de l'élément modifié
+            hiddenfield = document.createElement('input');
+            hiddenfield.type = 'hidden';
+            hiddenfield.name = 'contentToUpdate';
+            hiddenfield.value = value;
+            form.append(hiddenfield);
+
+            // ajout du form au document
             document.body.append(form);
             form.submit();
         }
