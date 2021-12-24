@@ -1,4 +1,6 @@
-div {
+
+code {
+    background-color: #aaa;
 }
 
 pre {
@@ -12,4 +14,16 @@ pre {
 section {
     max-width: 900px;
     margin: auto;
+}
+
+.blocInfoHeader {
+    color: blanchedalmond;
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+}
+
+.blocInfo {
+    background-color: #ccc;
+    margin-bottom: 2em;
 }
