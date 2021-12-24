@@ -45,10 +45,14 @@ $blocInfoList = $pdoResult->fetchAll(PDO::FETCH_ASSOC);
 
 $blocInfoObjectList = [];
 
-foreach ($blocInfoList as $textData) {
+foreach ($blocInfoList as $data) {
     $blocInfo = new BlocInfo(
-        $textData['text'],
-        $textData['id']
+        $data['text'],
+        $data['id']
     );
     $blocInfoObjectList[] = $blocInfo;
 }
+
+var_dump($blocInfoObjectList);
+
+?>
