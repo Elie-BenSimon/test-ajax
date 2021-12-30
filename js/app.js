@@ -1,6 +1,7 @@
 const app = {
     init: function() {
         click.init();
+        autoSizeTextarea.init();
     },
 };
 
