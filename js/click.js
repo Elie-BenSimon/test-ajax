@@ -86,9 +86,10 @@ const click = {
         const xmlhttp = new XMLHttpRequest();
         const id = click.elementEditable.id;
         const content = click.elementEditable.innerHTML;
-        xmlhttp.open("GET",`updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
+        xmlhttp.open("GET",`./php/updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
         xmlhttp.send();
         console.log("postAjax s'est bien lancé");
+        click.close(click.elementEditable);
     },
 
     // utilise le début des id pour renvoyer le type d'element

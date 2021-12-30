@@ -26,9 +26,6 @@ $insertQuery = "
     WHERE `id` = '{$id}'
 ";
 $pdoInstance->exec($insertQuery);
-//header('Location: index.php');
 
-echo "updated";
-
-
+// utiliser un ou plusieur echo permettrait de modifier le dom en retour
 ?>
