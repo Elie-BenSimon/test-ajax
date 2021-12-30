@@ -26,7 +26,7 @@ if (!empty($_GET['idToUpdate']) && !empty($_GET['contentToUpdate'])) {
         WHERE `id` = '{$id}'
     ";
     $pdoInstance->exec($insertQuery);
-    header('Location: index.php');
+    //header('Location: index.php');
     exit;
 }
 
@@ -51,6 +51,6 @@ foreach ($blocInfoList as $data) {
     $blocInfoObjectList[] = $blocInfo;
 }
 
-var_dump($blocInfoObjectList);
+//var_dump($blocInfoObjectList);
 
 ?>

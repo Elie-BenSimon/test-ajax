@@ -3,6 +3,8 @@ require __DIR__ . '/php/inc/classes/BlocInfo.php';
 require __DIR__ . '/php/inc/database.php';
 require __DIR__ . '/php/inc/templates/header.tpl.php';
 ?>
+
+
 <section>
     <?php foreach ($blocInfoObjectList as $blocData) : ?>
         <div class="blocInfo">
@@ -18,3 +20,6 @@ require __DIR__ . '/php/inc/templates/header.tpl.php';
 <?php
 require __DIR__ . '/php/inc/templates/footer.tpl.php';
 ?>
+
+<script src="./js/click.js"></script>
+<script src="./js/app.js"></script>

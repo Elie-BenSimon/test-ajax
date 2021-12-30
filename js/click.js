@@ -1,3 +1,4 @@
+/* Module gérant le clic sur toute la page */
 const click = {
 
     init: function () {
@@ -9,7 +10,7 @@ const click = {
 
     // quand un click a lieu
     handleClick: function (event) {
-
+        console.log("handleClick");
         // si la cible du clic est un bouton "edit"
         if (event.target.classList.contains('editButton')) {
 
@@ -20,13 +21,13 @@ const click = {
 
             // si l'élément "pre" associé est editable on le ferme
             if (isEditable) {
-                click.post();
+                click.postAjax();
             }
 
             // sinon on ferme ceux eventuellement ouvert, et l'élément pre associé au bouton cliqué devient editable
             else {
                 if (click.elementEditable != null) {
-                    click.post();
+                    click.postAjax();
                 }
                 event.target.textContent = "quit editing";
                 preElement.setAttribute("contenteditable", "true");
@@ -40,22 +41,23 @@ const click = {
 
             // s'il n'est pas editable le potentiel élément "pre" editable est fermé
             if (event.target.getAttribute("contentEditable") === "false") {
-                click.post();
+                click.postAjax();
             }
         }
 
         // sinon, le potentiel élément "pre" editable est fermé
         else {
-            click.post();
+            click.postAjax();
         }
     },
 
-    post: function () {
+    // passe les éléments à modifier en GET
+    post: function() {
         if (click.elementEditable != null) {
 
             // stockage des informations à passer en requête
             const id = click.elementEditable.id;
-            const value = click.elementEditable.textContent;
+            const value = click.elementEditable.innerHTML;
             let form = document.createElement('form');
             form.method = 'GET';
 
@@ -77,6 +79,16 @@ const click = {
             document.body.append(form);
             form.submit();
         }
+    },
+
+    // met à jour la base de données sans recharger la page
+    postAjax: function() {
+        const xmlhttp = new XMLHttpRequest();
+        const id = click.elementEditable.id;
+        const content = click.elementEditable.innerHTML;
+        xmlhttp.open("GET",`updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
+        xmlhttp.send();
+        console.log("postAjax s'est bien lancé");
     },
 
     // utilise le début des id pour renvoyer le type d'element
@@ -117,7 +129,6 @@ const click = {
                 buttonElement.textContent = "edit content";
             }
         }
-        //click.post();
     }
 }
 
