@@ -17,18 +17,16 @@ catch (Exception $error) {
 }
 
 
-if (!empty($_GET['nomdelacategorie'])) {
-    $value = $_GET['nomdelacategorie'];
+if (!empty($_GET['idToUpdate']) && !empty($_GET['contentToUpdate'])) {
+    $id = $_GET['idToUpdate'];
+    $content = $_GET['contentToUpdate'];
     $insertQuery = "
-        INSERT INTO `test` (
-            `text`
-        ) VALUES (
-            '{$value}'
-        )
-        WHERE `id` = '{$value}'
+        UPDATE `test`
+        SET `text` = '{$content}'
+        WHERE `id` = '{$id}'
     ";
     $pdoInstance->exec($insertQuery);
-    header('Location: index.php');
+    //header('Location: index.php');
     exit;
 }
 
@@ -45,10 +43,14 @@ $blocInfoList = $pdoResult->fetchAll(PDO::FETCH_ASSOC);
 
 $blocInfoObjectList = [];
 
-foreach ($blocInfoList as $textData) {
+foreach ($blocInfoList as $data) {
     $blocInfo = new BlocInfo(
-        $textData['text'],
-        $textData['id']
+        $data['text'],
+        $data['id']
     );
     $blocInfoObjectList[] = $blocInfo;
 }
+
+//var_dump($blocInfoObjectList);
+
+?>
