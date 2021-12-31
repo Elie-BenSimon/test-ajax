@@ -1,12 +1,4 @@
 
-code {
-    background-color: #aaa;
-}
-
-pre {
-    width: 100%;
-}
-
 section {
     max-width: 900px;
     margin: auto;
@@ -28,6 +20,10 @@ section {
     width: 100%;
     resize: none;
     background: #EEE;
+    padding: 1em;
+    margin: 0;
+    box-sizing:border-box;
+    border: 0;
 }
 
 .blocInfoTextarea:focus{
