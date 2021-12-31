@@ -55,8 +55,6 @@ const click = {
                 click.postAjax();
             }
 
-            const idForElements = Date.now();
-
             // h3
             const h3Element = document.createElement("h3");
             h3Element.textContent = "Titre de votre infoBloc";
@@ -64,7 +62,6 @@ const click = {
             // button "edit content"
             const editButtonElement = document.createElement("button");
             editButtonElement.className = "editButton";
-            editButtonElement.id = idForElements;
             editButtonElement.textContent = "Edit Content";
 
             // div "header" du bloc info
@@ -76,9 +73,9 @@ const click = {
             // textarea
             const textareaElement = document.createElement("textarea");
             textareaElement.setAttribute("onInput", "autoSizeTextarea.onInput()");
-            textareaElement.className = "blocInfoTextarea";
-            textareaElement.id = idForElements;
+            textareaElement.classList.add("blocInfoTextarea", "textAreaEditable");
             textareaElement.value = "wow c'est vachement interessant!";
+            click.elementEditable = textareaElement;
 
             // div bloc info
             const divBlocElement = document.createElement("div");
@@ -92,8 +89,11 @@ const click = {
 
             const xmlhttp = new XMLHttpRequest();
             const content = textareaElement.value
-            console.log(content);
-            xmlhttp.open("GET",`./php/newData.php?idToUpdate=${idForElements}&contentToUpdate=${content}`,true);
+            xmlhttp.onload = function() {
+                textareaElement.id = this.responseText.replace(/(\r\n|\n|\r)/gm, "");
+                editButtonElement.id = this.responseText.replace(/(\r\n|\n|\r)/gm, "");
+            };
+            xmlhttp.open("GET","./php/newData.php",true);
             xmlhttp.send();
         }
 
@@ -108,7 +108,6 @@ const click = {
         const xmlhttp = new XMLHttpRequest();
         const id = click.elementEditable.id;
         const content = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-        console.log(content);
         xmlhttp.open("GET",`./php/updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
         xmlhttp.send();
         click.close(click.elementEditable);

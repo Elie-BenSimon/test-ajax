@@ -17,9 +17,6 @@ catch (Exception $error) {
 }
 
 
-$id = $_GET['idToUpdate'];
-$content = $_GET['contentToUpdate'];
-
 $insertQuery = "
     INSERT INTO `test`
         (`text`)
@@ -29,4 +26,19 @@ $insertQuery = "
 
 $pdoInstance->exec($insertQuery);
 
+// retourne l'id de la data nouvellement créé
+$sql = 
+"
+    SELECT `id` 
+    FROM `test` 
+    ORDER BY `id` DESC 
+    LIMIT 1;
+";
+$pdoResult = $pdoInstance->query($sql);
+
+if ($pdoResult) {
+    $data = $pdoResult->fetch(PDO::FETCH_ASSOC);
+}
+echo($data["id"]);
 ?>
+
