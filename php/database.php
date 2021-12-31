@@ -30,7 +30,7 @@ $blocInfoObjectList = [];
 
 foreach ($blocInfoList as $data) {
     $blocInfo = new BlocInfo(
-        $data['text'],
+        str_replace("<br>", "\n", $data['text']),
         $data['id']
     );
     $blocInfoObjectList[] = $blocInfo;
@@ -39,7 +39,7 @@ foreach ($blocInfoList as $data) {
 //var_dump($blocInfoObjectList);
 
 
-// Ancienne méthode de mise à jour de la base de donnée via un formulaire (méthode 'post' du module 'Click')//
+// Ancienne méthode de mise à jour de la base de donnée via un formulaire (méthode 'pogit stausst' du module 'Click')//
 /*
 if (!empty($_GET['idToUpdate']) && !empty($_GET['contentToUpdate'])) {
     $id = $_GET['idToUpdate'];

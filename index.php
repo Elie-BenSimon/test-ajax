@@ -12,9 +12,7 @@ require __DIR__ . '/php/templates/header.tpl.php';
                 <h3>Nom du bloc info</h3>
                 <button class="editButton" id=<?=$blocData->id?>>edit content</button>
             </div>
-            <pre>
-                <textarea oninput="autoSizeTextarea.onInput()" readonly class="blocInfoTextarea" id=<?=$blocData->id?>><?= $blocData->content ?></textarea>
-            </pre>
+            <textarea oninput="autoSizeTextarea.onInput()" readonly class="blocInfoTextarea" id=<?= $blocData->id ?>><?= $blocData->content ?></textarea>
         </div>
     <?php endforeach ?>
 </section>

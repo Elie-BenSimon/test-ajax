@@ -89,7 +89,8 @@ const click = {
     postAjax: function() {
         const xmlhttp = new XMLHttpRequest();
         const id = click.elementEditable.id;
-        const content = click.elementEditable.value;
+        const content = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+        console.log(content);
         xmlhttp.open("GET",`./php/updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
         xmlhttp.send();
         click.close(click.elementEditable);
