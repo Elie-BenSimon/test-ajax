@@ -111,6 +111,9 @@ const click = {
         xmlhttp.open("GET",`./php/updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
         xmlhttp.send();
         click.close(click.elementEditable);
+        
+        // utilisé pour du debugage
+        xmlhttp.onload = function() {console.log(this.responseText)}
     },
 
     // ferme un élément textarea entré en paramètre
