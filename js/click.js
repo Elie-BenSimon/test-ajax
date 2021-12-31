@@ -92,7 +92,6 @@ const click = {
         const content = click.elementEditable.value;
         xmlhttp.open("GET",`./php/updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
         xmlhttp.send();
-        console.log("postAjax s'est bien lancé avec l'id " + id + " ,et le contenu: " + content);
         click.close(click.elementEditable);
     },
 
