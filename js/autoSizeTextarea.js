@@ -3,7 +3,6 @@ const autoSizeTextarea = {
         const textAreaElementsList = document.querySelectorAll(".blocInfoTextarea");
 
         for (let i = 0; i < textAreaElementsList.length; i++) {
-            console.log("dans la boucle");
             textAreaElementsList[i].setAttribute("style", "height:" + (textAreaElementsList[i].scrollHeight) + "px;overflow-y:hidden;");
             textAreaElementsList[i].addEventListener("input", autoSizeTextarea.OnInput, false);
         }

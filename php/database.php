@@ -23,17 +23,21 @@ $sql =
     `id`
     FROM `test`
 ";
-$pdoResult = $pdoInstance->query($sql);
-$blocInfoList = $pdoResult->fetchAll(PDO::FETCH_ASSOC);
 
+$pdoResult = $pdoInstance->query($sql);
 $blocInfoObjectList = [];
 
-foreach ($blocInfoList as $data) {
-    $blocInfo = new BlocInfo(
-        str_replace("<br>", "\n", $data['text']),
-        $data['id']
-    );
-    $blocInfoObjectList[] = $blocInfo;
+if ($pdoResult) {
+    $blocInfoList = $pdoResult->fetchAll(PDO::FETCH_ASSOC);
+    
+    
+    foreach ($blocInfoList as $data) {
+        $blocInfo = new BlocInfo(
+            str_replace("<br>", "\n", $data['text']),
+            $data['id']
+        );
+        $blocInfoObjectList[] = $blocInfo;
+    }
 }
 
 //var_dump($blocInfoObjectList);

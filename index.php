@@ -5,7 +5,7 @@ require __DIR__ . '/php/templates/header.tpl.php';
 ?>
 
 
-<section>
+<section id="sectionBlocInfo">
     <?php foreach ($blocInfoObjectList as $blocData) : ?>
         <div class="blocInfo">
             <div class="blocInfoHeader">
@@ -16,6 +16,7 @@ require __DIR__ . '/php/templates/header.tpl.php';
         </div>
     <?php endforeach ?>
 </section>
+<button id="newBloc">nouveau bloc</button>
 
 <?php
 require __DIR__ . '/php/templates/footer.tpl.php';

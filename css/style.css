@@ -33,3 +33,8 @@ section {
 textarea.blocInfoTextarea.textAreaEditable {
     outline: black solid 3px;
 }
+
+#newBloc {
+    display: block;
+    margin: auto;
+}
