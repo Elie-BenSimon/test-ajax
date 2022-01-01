@@ -1,16 +1,4 @@
 
-code {
-    background-color: #aaa;
-}
-
-pre {
-    background:bisque;
-    padding:10px;
-    display: inline-block;
-    white-space: pre-wrap;
-    background: #EEE;
-}
-
 section {
     max-width: 900px;
     margin: auto;
@@ -26,4 +14,27 @@ section {
 .blocInfo {
     background-color: #ccc;
     margin-bottom: 2em;
+}
+
+.blocInfoTextarea {
+    width: 100%;
+    resize: none;
+    background: #EEE;
+    padding: 1em;
+    margin: 0;
+    box-sizing:border-box;
+    border: 0;
+}
+
+.blocInfoTextarea:focus{
+    outline: none;
+}
+
+textarea.blocInfoTextarea.textAreaEditable {
+    outline: black solid 3px;
+}
+
+#newBloc {
+    display: block;
+    margin: auto;
 }

@@ -10,126 +10,126 @@ const click = {
 
     // quand un click a lieu
     handleClick: function (event) {
-        console.log("handleClick");
+
         // si la cible du clic est un bouton "edit"
         if (event.target.classList.contains('editButton')) {
 
-            // stockage et récupération de l'état de l'élément "pre" associé (editable ou non)
-            const preElement = event.target.parentNode.parentNode.querySelector('pre');
-            let isEditable = preElement.getAttribute("contentEditable");
-            isEditable = (isEditable === 'true');
+            // stockage et récupération de l'état de l'élément textarea associé
+            const textareaElement = event.target.parentNode.parentNode.querySelector('.blocInfoTextarea');
+            let readonly = textareaElement.getAttribute("readonly");
+            readonly = (readonly != null);
 
-            // si l'élément "pre" associé est editable on le ferme
-            if (isEditable) {
+            // si l'élément textarea associé est editable on le ferme et on met à jour la db
+            if (readonly === false) {
                 click.postAjax();
             }
 
-            // sinon on ferme ceux eventuellement ouvert, et l'élément pre associé au bouton cliqué devient editable
+            // sinon l'élément textarea associé au bouton cliqué devient editable
             else {
+                // si un autre textarea est editable, on le ferme et on met à jour la db
                 if (click.elementEditable != null) {
                     click.postAjax();
                 }
                 event.target.textContent = "quit editing";
-                preElement.setAttribute("contenteditable", "true");
-                preElement.focus();
-                click.elementEditable = preElement;
+                textareaElement.removeAttribute("readonly");
+                textareaElement.focus();
+                click.elementEditable = textareaElement;
+                click.elementEditable.classList.add("textAreaEditable");
             }
         }
 
-        // si c'est un élément "pre"
-        else if (event.target.classList.contains('blocInfoPre')) {
+        // si c'est un élément textarea
+        else if (event.target.classList.contains('blocInfoTextarea')) {
 
-            // s'il n'est pas editable le potentiel élément "pre" editable est fermé
-            if (event.target.getAttribute("contentEditable") === "false") {
+            // s'il n'est pas editable et qu'un autre textarea est ouvert on le ferme
+            if (event.target.getAttribute("readonly") != null && click.elementEditable != null) {
                 click.postAjax();
             }
         }
 
-        // sinon, le potentiel élément "pre" editable est fermé
-        else {
-            click.postAjax();
+        // si c'est un bouton pour ajouter un nouveau bloc
+        else if (event.target.id === "newBloc") {
+            if (click.elementEditable != null) {
+                click.postAjax();
+            }
+
+            // h3
+            const h3Element = document.createElement("h3");
+            h3Element.textContent = "Titre de votre infoBloc";
+
+            // button "edit content"
+            const editButtonElement = document.createElement("button");
+            editButtonElement.className = "editButton";
+            editButtonElement.textContent = "Edit Content";
+
+            // div "header" du bloc info
+            const divHeaderElement = document.createElement("div");
+            divHeaderElement.className = "blocInfoHeader";
+            divHeaderElement.append(h3Element);
+            divHeaderElement.append(editButtonElement);
+
+            // textarea
+            const textareaElement = document.createElement("textarea");
+            textareaElement.setAttribute("onInput", "autoSizeTextarea.onInput()");
+            textareaElement.classList.add("blocInfoTextarea", "textAreaEditable");
+            textareaElement.value = "wow c'est vachement interessant!";
+            click.elementEditable = textareaElement;
+
+            // div bloc info
+            const divBlocElement = document.createElement("div");
+            divBlocElement.className = "blocInfo";
+            divBlocElement.append(divHeaderElement);
+            divBlocElement.append(textareaElement);
+            
+            // ajout du nouveau bloc dans le document
+            sectionElement = document.getElementById("sectionBlocInfo");
+            sectionElement.append(divBlocElement);
+
+            const xmlhttp = new XMLHttpRequest();
+            const content = textareaElement.value
+            xmlhttp.onload = function() {
+                textareaElement.id = this.responseText.replace(/(\r\n|\n|\r)/gm, "");
+                editButtonElement.id = this.responseText.replace(/(\r\n|\n|\r)/gm, "");
+            };
+            xmlhttp.open("GET","./php/newData.php",true);
+            xmlhttp.send();
         }
-    },
 
-    // passe les éléments à modifier en GET
-    post: function() {
-        if (click.elementEditable != null) {
-
-            // stockage des informations à passer en requête
-            const id = click.elementEditable.id;
-            const value = click.elementEditable.innerHTML;
-            let form = document.createElement('form');
-            form.method = 'GET';
-
-            // input stockant l'id de l'élément modifié
-            let hiddenfield = document.createElement('input');
-            hiddenfield.type = 'hidden';
-            hiddenfield.name = 'idToUpdate';
-            hiddenfield.value = id;
-            form.append(hiddenfield);
-
-            // input stockant l'id de l'élément modifié
-            hiddenfield = document.createElement('input');
-            hiddenfield.type = 'hidden';
-            hiddenfield.name = 'contentToUpdate';
-            hiddenfield.value = value;
-            form.append(hiddenfield);
-
-            // ajout du form au document
-            document.body.append(form);
-            form.submit();
+        // sinon si un textarea est editable on le ferme, et on met à jour la db
+        else if (click.elementEditable != null) {
+            click.postAjax();
         }
     },
 
     // met à jour la base de données sans recharger la page
     postAjax: function() {
         const xmlhttp = new XMLHttpRequest();
-        const id = click.elementEditable.id;
-        const content = click.elementEditable.innerHTML;
-        xmlhttp.open("GET",`updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
-        xmlhttp.send();
-        console.log("postAjax s'est bien lancé");
+        const idData = click.elementEditable.id;
+        // le contenu doit être encodé pour ne pas poser de problème si des caractère spéciaux sont dans le texte (& et % par exemple)
+        // les caractères de retour à la ligne sont remplacés par des balise br pour être sur de les conserver
+        const contentData = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+        const dataObject = {id:idData, content:contentData};
+        jsonData = JSON.stringify(dataObject);
+        xmlhttp.open("POST", "./php/updateDatabase.php", true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        xmlhttp.send(jsonData);
+        click.close(click.elementEditable);
+        
+        // utilisé pour du debugage
+        console.log("postAjax se lance")
+        xmlhttp.onload = function() {console.log(this.responseText)}
     },
 
-    // utilise le début des id pour renvoyer le type d'element
-    getIdType: function (str) {
-        if (str.indexOf('editButton') >= 0) {
-            return 'editButton';
-        }
-        else if (str.indexOf('blocInfoPre') >= 0) {
-            return 'blocInfoPre';
-        }
-        else {
-            return 'other';
-        }
-    },
-
-    // ferme un élément "pre" entré en paramètre
+    // ferme un élément textarea entré en paramètre
     close: function (element) {
         if (element != null) {
             const buttonElement = click.elementEditable.parentNode.querySelector(".editButton");
             buttonElement.textContent = "Edit content";
-            element.setAttribute("contenteditable", "false");
+            element.setAttribute("readonly", "true");
+            element.classList.remove("textAreaEditable");
             click.elementEditable = null;
         }
     },
-
-    // ferme les "pre" et réinitialise les bouton edit
-    closeAllPre: function () {
-        // ferme tous les "pre" editable
-        const preElementList = document.querySelectorAll('pre');
-        for (preElement of preElementList) {
-            preElement.setAttribute("contenteditable", "false");
-        }
-
-        // réinitialise le texte des boutons edit
-        const buttonElementList = document.querySelectorAll('button');
-        for (buttonElement of buttonElementList) {
-            if (buttonElement.textContent === "quit editing") {
-                buttonElement.textContent = "edit content";
-            }
-        }
-    }
 }
 
 

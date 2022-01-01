@@ -16,19 +16,14 @@ catch (Exception $error) {
     exit;
 }
 
-
-$id = $_GET['idToUpdate'];
-$content = $_GET['contentToUpdate'];
+$str_json = file_get_contents('php://input');
+$dataArray = json_decode($str_json);
 
 $insertQuery = "
     UPDATE `test`
-    SET `text` = '{$content}'
-    WHERE `id` = '{$id}'
+    SET `text` = '{$dataArray->content}'
+    WHERE `id` = '{$dataArray->id}'
 ";
 $pdoInstance->exec($insertQuery);
-//header('Location: index.php');
-
-echo "updated";
-
 
 ?>
