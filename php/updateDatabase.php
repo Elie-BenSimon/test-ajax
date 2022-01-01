@@ -17,7 +17,7 @@ catch (Exception $error) {
 }
 
 
-$content = $_POST['content'];
+$content = urldecode($_POST['content']);
 $id = $_POST['id'];
 
 $insertQuery = "
