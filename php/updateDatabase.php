@@ -17,13 +17,14 @@ catch (Exception $error) {
 }
 
 $str_json = file_get_contents('php://input');
-$dataArray = json_decode($str_json);
+$dataObject = json_decode($str_json);
 
-$insertQuery = "
+$updateQuery = "
     UPDATE `test`
-    SET `text` = '{$dataArray->content}'
-    WHERE `id` = '{$dataArray->id}'
+    SET `text` = '{$dataObject->content}'
+    WHERE `id` = '{$dataObject->id}'
 ";
-$pdoInstance->exec($insertQuery);
+echo $pdoInstance->exec($updateQuery);
 
+print_r($dataObject);
 ?>

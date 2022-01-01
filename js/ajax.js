@@ -1,3 +1,0 @@
-const ajax = {
-    init: 
-}

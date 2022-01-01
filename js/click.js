@@ -6,6 +6,7 @@ const click = {
         // on pose un event listener sur tout le document
         document.addEventListener('click', click.handleClick);
         click.elementEditable = null;
+        click.xmlhttp = new XMLHttpRequest();
     },
 
     // quand un click a lieu
@@ -72,7 +73,7 @@ const click = {
             const textareaElement = document.createElement("textarea");
             textareaElement.setAttribute("onInput", "autoSizeTextarea.onInput()");
             textareaElement.classList.add("blocInfoTextarea", "textAreaEditable");
-            textareaElement.value = "wow c'est vachement interessant!";
+            textareaElement.value = "ya plus qu'à remplir ça!";
             click.elementEditable = textareaElement;
 
             // div bloc info
@@ -85,14 +86,14 @@ const click = {
             sectionElement = document.getElementById("sectionBlocInfo");
             sectionElement.append(divBlocElement);
 
-            const xmlhttp = new XMLHttpRequest();
+            
             const content = textareaElement.value
-            xmlhttp.onload = function() {
+            click.xmlhttp.onload = function() {
                 textareaElement.id = this.responseText.replace(/(\r\n|\n|\r)/gm, "");
                 editButtonElement.id = this.responseText.replace(/(\r\n|\n|\r)/gm, "");
             };
-            xmlhttp.open("GET","./php/newData.php",true);
-            xmlhttp.send();
+            click.xmlhttp.open("GET","./php/newData.php",true);
+            click.xmlhttp.send();
         }
 
         // sinon si un textarea est editable on le ferme, et on met à jour la db
@@ -103,19 +104,21 @@ const click = {
 
     // met à jour la base de données sans recharger la page
     postAjax: function() {
-        const xmlhttp = new XMLHttpRequest();
         const idData = click.elementEditable.id;
-        const contentData = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+        // les caractères de retour à la ligne sont transformé en br
+        let contentData = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+        // les simplequotes doivent être échapé pour ne pas faire bugguer l'update query
+        contentData = click.elementEditable.value.replace(/(?:')/g, "''");
         const objectData = {id:idData, content:contentData};
-        jsonData = JSON.stringify(objectData);
-        xmlhttp.open("POST", "./php/updateDatabase.php", true);
-        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-        xmlhttp.send(jsonData);
+        const jsonData = JSON.stringify(objectData);
+        click.xmlhttp.open("POST", "./php/updateDatabase.php", true);
+        click.xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        click.xmlhttp.send(jsonData);
         click.close(click.elementEditable);
         
         // utilisé pour du debugage
         //console.log("postAjax se lance")
-        //xmlhttp.onload = function() {console.log(this.responseText)}
+        click.xmlhttp.onload = function() {console.log(this.responseText)}
     },
 
     // ferme un élément textarea entré en paramètre
