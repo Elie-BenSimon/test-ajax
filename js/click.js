@@ -18,8 +18,6 @@ const click = {
             const textareaElement = event.target.parentNode.parentNode.querySelector('.blocInfoTextarea');
             let readonly = textareaElement.getAttribute("readonly");
             readonly = (readonly != null);
-            console.log(textareaElement);
-            console.log(readonly);
 
             // si l'élément textarea associé est editable on le ferme et on met à jour la db
             if (readonly === false) {
@@ -106,13 +104,16 @@ const click = {
     // met à jour la base de données sans recharger la page
     postAjax: function() {
         const xmlhttp = new XMLHttpRequest();
-        const id = click.elementEditable.id;
-        const content = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-        xmlhttp.open("GET",`./php/updateDatabase.php?idToUpdate=${id}&contentToUpdate=${content}`,true);
-        xmlhttp.send();
+        const content = "content=" + click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>") +
+                        "&id=" + click.elementEditable.id;
+        
+        xmlhttp.open("POST", "./php/updateDatabase.php", true);
+        xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        xmlhttp.send(content);
         click.close(click.elementEditable);
         
         // utilisé pour du debugage
+        console.log("postAjax se lance")
         xmlhttp.onload = function() {console.log(this.responseText)}
     },
 

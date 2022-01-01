@@ -17,8 +17,8 @@ catch (Exception $error) {
 }
 
 
-$id = $_GET['idToUpdate'];
-$content = $_GET['contentToUpdate'];
+$content = $_POST['content'];
+$id = $_POST['id'];
 
 $insertQuery = "
     UPDATE `test`
@@ -27,5 +27,4 @@ $insertQuery = "
 ";
 $pdoInstance->exec($insertQuery);
 
-// utiliser un ou plusieur echo permettrait de modifier le dom en retour
 ?>

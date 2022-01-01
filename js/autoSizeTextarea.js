@@ -10,9 +10,7 @@ const autoSizeTextarea = {
 
     onInput: function() {
         const textareaElementEditable = document.querySelector(".textAreaEditable");
-        console.log(textareaElementEditable);
         textareaElementEditable.style.height = "auto";
         textareaElementEditable.style.height = (textareaElementEditable.scrollHeight) + "px";
-        console.log("onInput se lance");
     }
 }
