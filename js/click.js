@@ -105,19 +105,17 @@ const click = {
     postAjax: function() {
         const xmlhttp = new XMLHttpRequest();
         const idData = click.elementEditable.id;
-        // le contenu doit être encodé pour ne pas poser de problème si des caractère spéciaux sont dans le texte (& et % par exemple)
-        // les caractères de retour à la ligne sont remplacés par des balise br pour être sur de les conserver
         const contentData = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-        const dataObject = {id:idData, content:contentData};
-        jsonData = JSON.stringify(dataObject);
+        const objectData = {id:idData, content:contentData};
+        jsonData = JSON.stringify(objectData);
         xmlhttp.open("POST", "./php/updateDatabase.php", true);
         xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
         xmlhttp.send(jsonData);
         click.close(click.elementEditable);
         
         // utilisé pour du debugage
-        console.log("postAjax se lance")
-        xmlhttp.onload = function() {console.log(this.responseText)}
+        //console.log("postAjax se lance")
+        //xmlhttp.onload = function() {console.log(this.responseText)}
     },
 
     // ferme un élément textarea entré en paramètre
