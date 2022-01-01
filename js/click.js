@@ -104,13 +104,15 @@ const click = {
     // met à jour la base de données sans recharger la page
     postAjax: function() {
         const xmlhttp = new XMLHttpRequest();
-        const id = "id=" + click.elementEditable.id;
+        const idData = click.elementEditable.id;
         // le contenu doit être encodé pour ne pas poser de problème si des caractère spéciaux sont dans le texte (& et % par exemple)
         // les caractères de retour à la ligne sont remplacés par des balise br pour être sur de les conserver
-        const content = "&content=" + encodeURIComponent(click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>"));
+        const contentData = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+        const dataObject = {id:idData, content:contentData};
+        jsonData = JSON.stringify(dataObject);
         xmlhttp.open("POST", "./php/updateDatabase.php", true);
         xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-        xmlhttp.send(id+content);
+        xmlhttp.send(jsonData);
         click.close(click.elementEditable);
         
         // utilisé pour du debugage
