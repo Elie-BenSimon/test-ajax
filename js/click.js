@@ -107,7 +107,7 @@ const click = {
         const idData = click.elementEditable.id;
         // les caractères de retour à la ligne sont transformé en br
         let contentData = click.elementEditable.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-        // les simplequotes doivent être échapé pour ne pas faire bugguer l'update query
+        // les simplequotes doivent être échapés pour ne pas faire buguer l'update query
         contentData = click.elementEditable.value.replace(/(?:')/g, "''");
         const objectData = {id:idData, content:contentData};
         const jsonData = JSON.stringify(objectData);
