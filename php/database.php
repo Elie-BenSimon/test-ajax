@@ -33,15 +33,43 @@ if ($pdoResult) {
     
     foreach ($blocInfoList as $data) {
         $blocInfo = new BlocInfo(
-            str_replace("<br>", "\n", $data['text']),
+            $data['text'],
             $data['id']
         );
         $blocInfoObjectList[] = $blocInfo;
     }
 }
 
-//var_dump($blocInfoObjectList);
 
+//récupération des données sous formes de tableau
+$sql = 
+"
+    SELECT
+    *
+    FROM `tableau`
+";
+
+$pdoResult = $pdoInstance->query($sql);
+
+if ($pdoResult) {
+    $table = $pdoResult->fetchAll(PDO::FETCH_ASSOC);
+    foreach($table as $line) {
+        $id = $line['id'];
+        foreach($line as $key2=>$value) {
+            if ($key2 != 'id') {
+                echo"id:".$id;
+                echo '<br>';
+                echo $key2;
+                echo '<br>';
+                echo $value;
+                echo '<br>';
+            }
+        }
+    }
+}
+
+
+//var_dump($blocInfoObjectList);
 
 // Ancienne méthode de mise à jour de la base de donnée via un formulaire (méthode 'pogit stausst' du module 'Click')//
 /*
