@@ -5,19 +5,20 @@ require __DIR__ . '/php/templates/header.tpl.php';
 ?>
 
 <section id="sectionBlocInfo">
-    <?php foreach ($blocInfoObjectList as $blocData) : ?>
+    <?php foreach ($blocInfoList as $bloc): ?> 
         <div class="blocInfo">
             <div class="blocInfoHeader">
                 <h3>Nom du bloc info</h3>
-                <button class="editButton" id=<?= $blocData->id ?>>edit content</button>
+                <button class="editButton" id=<?=$bloc["id"]?>>edit content</button>
             </div>
-            <textarea oninput="autoSizeTextarea.onInput()" readonly class="blocInfoTextarea" id=<?= $blocData->id ?>><?= $blocData->content ?></textarea>
+            <textarea oninput="autoSizeTextarea.onInput()" readonly class="blocInfoTextarea" id=<?=$bloc["id"]?>><?=$bloc["text"]?></textarea>
         </div>
     <?php endforeach; ?>
 
     <div class="blocInfo">
         <div class="blocInfoHeader">
             <h3>un tableau</h3>
+            <button class="editButton tableButton" id="1">edit content</button>
         </div>
         <table>
             <?php foreach ($table as $line) : 
@@ -26,12 +27,11 @@ require __DIR__ . '/php/templates/header.tpl.php';
                     <?php foreach ($line as $columnName=>$value) :
                         if ($columnName != "id") :?>
                             <td>
-                                <textarea oninput="autoSizeTextarea.onInput()" id=<?=$id?> class="blocInfoTextarea textAreaEditable" headers=<?=$columnName?>><?=$value?></textarea>
+                                <textarea oninput="autoSizeTextarea.onInput()" readonly class="blocInfoTextarea" id=<?=$id?> data-idTable="1" data-column=<?=$columnName?>><?=$value?></textarea>
                             </td>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </tr>
-                
             <?php endforeach; ?>
         </table>
     </div>

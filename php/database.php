@@ -38,6 +38,7 @@ if ($pdoResult) {
         );
         $blocInfoObjectList[] = $blocInfo;
     }
+    print_r($blocInfoObjectList);
 }
 
 
@@ -53,19 +54,6 @@ $pdoResult = $pdoInstance->query($sql);
 
 if ($pdoResult) {
     $table = $pdoResult->fetchAll(PDO::FETCH_ASSOC);
-    foreach($table as $line) {
-        $id = $line['id'];
-        foreach($line as $key2=>$value) {
-            if ($key2 != 'id') {
-                echo"id:".$id;
-                echo '<br>';
-                echo $key2;
-                echo '<br>';
-                echo $value;
-                echo '<br>';
-            }
-        }
-    }
 }
 
 

@@ -15,33 +15,65 @@ const click = {
         // si la cible du clic est un bouton "edit"
         if (event.target.classList.contains('editButton')) {
 
-            // stockage et récupération de l'état de l'élément textarea associé
-            const textareaElement = event.target.parentNode.parentNode.querySelector('.blocInfoTextarea');
-            let readonly = textareaElement.getAttribute("readonly");
-            readonly = (readonly != null);
+            // s'il s'agit d'un bouton d'un tableau
+            if (event.target.classList.contains('tableButton')) {
 
-            // si l'élément textarea associé est editable on le ferme et on met à jour la db
-            if (readonly === false) {
-                click.postAjax();
-            }
-
-            // sinon l'élément textarea associé au bouton cliqué devient editable
-            else {
-                // si un autre textarea est editable, on le ferme et on met à jour la db
-                if (click.elementEditable != null) {
+                // récupération de tous les textarea constituant le tableau
+                const textareaElementsList = event.target.parentNode.parentNode.querySelectorAll('[data-idTable="1"]');
+                let readonly = textareaElementsList[0].getAttribute("readonly");
+                readonly = (readonly != null);
+                
+                // si la première cellule du tableau est editable on ferme toutes les cellules du tableau et on met à jour la db
+                if (readonly === false) {
                     click.postAjax();
                 }
-                event.target.textContent = "quit editing";
-                textareaElement.removeAttribute("readonly");
-                textareaElement.focus();
-                click.elementEditable = textareaElement;
-                click.elementEditable.classList.add("textAreaEditable");
+
+                // sinon, toutes les cellules du tableau deviennent editable
+                else {
+                    if (click.elementEditable != null) {
+                        click.postAjax();
+                    }
+                    click.elementEditable = [];
+                    event.target.textContent = "quit editing";
+                    event.target.classList.add("quitEditButton");
+                    for(textareaElement of textareaElementsList) {
+                        textareaElement.removeAttribute("readonly");
+                        textareaElement.classList.add("textAreaEditable");
+                        click.elementEditable.push(textareaElement);
+                    }
+                }
             }
-        }
+
+            // s'il s'agit d'un bouton d'un bloc de texte
+            else {
+                // stockage et récupération de l'état de l'élément textarea associé
+                const textareaElement = event.target.parentNode.parentNode.querySelector('.blocInfoTextarea');
+                let readonly = textareaElement.getAttribute("readonly");
+                readonly = (readonly != null);
+    
+                // si l'élément textarea associé est editable on le ferme et on met à jour la db
+                if (readonly === false) {
+                    click.postAjax();
+                }
+    
+                // sinon l'élément textarea associé au bouton cliqué devient editable
+                else {
+                    // si un autre textarea est editable, on le ferme et on met à jour la db
+                    if (click.elementEditable != null) {
+                        click.postAjax();
+                    }
+                    event.target.textContent = "quit editing";
+                    event.target.classList.add("quitEditButton");
+                    textareaElement.removeAttribute("readonly");
+                    textareaElement.focus();
+                    textareaElement.classList.add("textAreaEditable");
+                    click.elementEditable[0] = textareaElement;
+                }
+            }
+        }        
 
         // si c'est un élément textarea
         else if (event.target.classList.contains('blocInfoTextarea')) {
-
             // s'il n'est pas editable et qu'un autre textarea est ouvert on le ferme
             if (event.target.getAttribute("readonly") != null && click.elementEditable != null) {
                 click.postAjax();
@@ -86,8 +118,8 @@ const click = {
             sectionElement = document.getElementById("sectionBlocInfo");
             sectionElement.append(divBlocElement);
 
-            
-            const content = textareaElement.value
+            // le retour de la requête AJAX met à jour les id des éléments
+            // je ne sais pas pourquoi, mais des retours à ligne squattaient les id...
             click.xmlhttp.onload = function() {
                 textareaElement.id = this.responseText.replace(/(\r\n|\n|\r)/gm, "");
                 editButtonElement.id = this.responseText.replace(/(\r\n|\n|\r)/gm, "");
@@ -104,28 +136,34 @@ const click = {
 
     // met à jour la base de données sans recharger la page
     postAjax: function() {
-        const idData = click.elementEditable.id;
-        // les simplequotes doivent être échapés pour ne pas faire buguer l'update query
-        contentData = click.elementEditable.value.replace(/(?:')/g, "''");
-        const objectData = {id:idData, content:contentData};
-        const jsonData = JSON.stringify(objectData);
-        click.xmlhttp.open("POST", "./php/updateDatabase.php", true);
-        click.xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-        click.xmlhttp.send(jsonData);
-        click.close(click.elementEditable);
-        
-        // utilisé pour du debugage
-        //console.log("postAjax se lance")
-        click.xmlhttp.onload = function() {console.log(this.responseText)}
+        for (elementEditable of click.elementEditable) {
+            const idData = elementEditable.id;
+            // les simplequotes doivent être échapés pour ne pas faire buguer l'update query
+            contentData = elementEditable.value.replace(/(?:')/g, "''");
+            const objectData = {id:idData, content:contentData};
+            const jsonData = JSON.stringify(objectData);
+            click.xmlhttp.open("POST", "./php/updateDatabase.php", true);
+            click.xmlhttp.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+            click.xmlhttp.send(jsonData);
+            
+            // utilisé pour du debugage
+            //console.log("postAjax se lance")
+            click.xmlhttp.onload = function() {console.log(this.responseText)}
+        }
+        click.close(elementEditable);
     },
 
     // ferme un élément textarea entré en paramètre
     close: function (element) {
         if (element != null) {
-            const buttonElement = click.elementEditable.parentNode.querySelector(".editButton");
+            const buttonElement = document.querySelector(".quitEditButton");
             buttonElement.textContent = "Edit content";
-            element.setAttribute("readonly", "true");
-            element.classList.remove("textAreaEditable");
+            buttonElement.classList.remove("quitEditButton");
+
+            for (element of click.elementEditable) {
+                element.setAttribute("readonly", "true");
+                element.classList.remove("textAreaEditable");
+            }
             click.elementEditable = null;
         }
     },
